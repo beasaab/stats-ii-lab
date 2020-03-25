@@ -42,11 +42,12 @@ ggplot(mlda, aes(x = agecell, # actual age
                  color = factor(treatment))) +
   geom_point() + 
   labs(x = "Age", 
-       y = "Mortality rate from motor vehicle \naccidents (per 100,000)") +
+       y = "Probability of being under 21\naccidents (per 100,000)") +
   scale_color_discrete(name = " ", 
                        labels = c("Under legal drinking age", "Over legal drinking age")) +
   geom_vline(xintercept = 21, linetype = "dotted") +
   theme_minimal()
+
 ```
 <p>
 We can see from the graph that at the 21-years-of-age threshold, young adults can legally consume and buy alcohol in the US, which would make age a viable forcing variable for a sharp-RDD set-up.
@@ -118,7 +119,6 @@ linear_plot <- mlda %>%
   theme_minimal()
 
 linear_plot
-
 ```
 <br>
 
@@ -211,6 +211,7 @@ RDestimate() is part of the `rdd` package. It performs local linear regressions 
 We have the option to set the cutpoint, kernel type, standard error type, etc.: https://www.rdocumentation.org/packages/rdd/versions/0.57/topics/RDestimate
 
 ```{r}
+#Local Linear Regression = it can shape better the data and know the best model specification
 llr <- RDestimate(outcome ~ agecell, data = mlda, cutpoint = 21)
 summary(llr)
 ```
@@ -221,6 +222,7 @@ The most straight-forward way to graph the output of this model is through the b
 ```{r fig.align="center"}
 plot(llr)
 title(main = "Motor Vehicle Accidents Death", xlab = "Age",ylab = "Mortality rate - Motor vehicle accidents (per 100K)")
+#a bit more accurate than what we were doing
 ```
 <br>
 <br>
@@ -261,6 +263,8 @@ ggplot(cct_data,
   geom_vline(xintercept = 20000, linetype = "dotted") +
   theme_minimal()
 
+```
+```{r}
 ggplot(cct_data, 
        aes(x = hh_income, 
            y = treatment, 
@@ -348,4 +352,5 @@ ggplot(cct_data,
 
 This case looks a bit ambiguous. Do you think people are sorting out just before the cut-off? If sorting were to exist which assumptions would be challenged? Would the existence of other programs that have the same threshold affect a causal reading of our results?
 
-
+There is not sorting - it looks like a normal distribution
+If there was a big difference right before or after the cutpoint 
